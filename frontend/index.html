@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Clickops Technologies</title>
+</head>
+<body>
+    <h1>Welcome to Clickops Technologies</h1>
+    <form id="registrationForm">
+        <label>Name: <input type="text" id="name"></label><br>
+        <label>Age: <input type="number" id="age"></label><br>
+        <label>Course: <input type="text" id="course"></label><br>
+        <label>Gender:
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </label><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        function submitForm() {
+            const name = document.getElementById("name").value;
+            const age = document.getElementById("age").value;
+            const course = document.getElementById("course").value;
+            const gender = document.getElementById("gender").value;
+
+            if (name && age && course && gender) {
+                fetch('http://13.201.227.152:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, age, course, gender })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("message").innerText = data.message;
+                })
+                .catch(error => {
+                    document.getElementById("message").innerText = 'Error: ' + error;
+                });
+            } else {
+                document.getElementById("message").innerText = 'All fields are required!';
+            }
+        }
+    </script>
+</body>
+</html>
+

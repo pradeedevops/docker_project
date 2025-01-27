@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: example
+      DB_NAME: clickops
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: clickops
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
